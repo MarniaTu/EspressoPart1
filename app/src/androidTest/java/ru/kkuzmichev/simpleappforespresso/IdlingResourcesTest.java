@@ -50,6 +50,11 @@ public class IdlingResourcesTest {
         gallery.check(matches(isDisplayed()));
         gallery.perform(click());
 
+        ViewInteraction recyclerView = onView(CustomViewMatcher.recyclerViewSizeMatcher(10));
+        recyclerView.check(matches(isDisplayed()));
+
+        recyclerView.check(CustomViewAssertions.isRecyclerView());
+
         ViewInteraction itemSeven = onView(allOf(withId(R.id.item_number), withText("7")));
         itemSeven.check(matches(withText("7")));
     }
