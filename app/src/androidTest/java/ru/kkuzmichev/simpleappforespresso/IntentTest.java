@@ -20,7 +20,8 @@ import android.view.ViewGroup;
 import android.view.ViewParent;
 
 import androidx.test.espresso.ViewInteraction;
-import androidx.test.espresso.intent.rule.IntentsTestRule;
+import androidx.test.espresso.intent.Intents;
+import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 
@@ -36,21 +37,29 @@ import org.junit.runner.RunWith;
 public class IntentTest {
 
     @Rule
-    public IntentsTestRule intentsTestRule = new IntentsTestRule(MainActivity.class);
+    public ActivityScenarioRule<MainActivity> mActivityScenarioRule = new ActivityScenarioRule<>(MainActivity.class);
+
 
     @Test
     public void intentTest() {
+
+
         ViewInteraction overflowMenuButton = onView(allOf(withContentDescription("More options"), childAtPosition(childAtPosition(withId(R.id.toolbar), 2), 0), isDisplayed()));
+
+        Intents.init();
+
         overflowMenuButton.perform(click());
 
-        ViewInteraction textView = onView(allOf(withId(androidx.constraintlayout.widget.R.id.title), withText("Settings"), withParent(withParent(withId(androidx.constraintlayout.widget.R.id.content))), isDisplayed()));
+        ViewInteraction textView = onView(allOf(withId(R.id.title), withText("Settings"), withParent(withParent(withId(R.id.content))), isDisplayed()));
         textView.check(matches(withText("Settings")));
 
-        ViewInteraction materialTextView = onView(allOf(withId(androidx.constraintlayout.widget.R.id.title), withText("Settings"), childAtPosition(childAtPosition(withId(androidx.constraintlayout.widget.R.id.content), 0), 0), isDisplayed()));
+        ViewInteraction materialTextView = onView(allOf(withId(R.id.title), withText("Settings"), childAtPosition(childAtPosition(withId(R.id.content), 0), 0), isDisplayed()));
         materialTextView.perform(click());
 
-        intended(hasData("https://google.com/"));
+        intended(hasData("https://google.com"));
         intended(hasAction(Intent.ACTION_VIEW));
+
+        Intents.release();
 
 
     }
